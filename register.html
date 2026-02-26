@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Register</h2>
+    <form id="registerForm">
+      <label>Email:</label>
+      <input type="email" id="email" required>
+
+      <label>Password:</label>
+      <input type="password" id="password" required>
+
+      <label>Device ID:</label>
+      <input type="text" id="device_id" required>
+
+      <label>Public Key:</label>
+      <input type="text" id="public_key" required>
+
+      <button type="submit" class="register">Register</button>
+    </form>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const device_id = document.getElementById('device_id').value;
+      const public_key = document.getElementById('public_key').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, device_id, public_key })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          document.getElementById('result').innerText = "✅ Registration successful! Redirecting to login...";
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 2000);
+        } else {
+          document.getElementById('result').innerText = "❌ Registration failed: " + data.message;
+        }
+      } catch (err) {
+        document.getElementById('result').innerText = "❌ Error: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
