@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome to Dashboard</h2>
+    <div id="userData"></div>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    const email = localStorage.getItem('email');
+    const password = localStorage.getItem('password');
+
+    async function fetchUserData() {
+      if (!email || !password) {
+        document.getElementById('userData').innerText = "❌ No login data found. Please login first.";
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          document.getElementById('userData').innerHTML = `
+            <p>✅ You are logged in!</p>
+            <p><strong>Email:</strong> ${data.user.email}</p>
+            <p><strong>Device ID:</strong> ${data.user.device_id}</p>
+            <p><strong>Public Key:</strong> ${data.user.public_key}</p>
+          `;
+        } else {
+          document.getElementById('userData').innerText = "❌ Failed to fetch user data.";
+        }
+      } catch (err) {
+        document.getElementById('userData').innerText = "❌ Error: " + err.message;
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    fetchUserData();
+  </script>
+</body>
+</html>
