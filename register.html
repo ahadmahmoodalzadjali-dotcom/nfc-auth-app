@@ -36,7 +36,8 @@
       const public_key = document.getElementById('public_key').value;
 
       try {
-        const response = await fetch('http://localhost:3000/register', {
+        // ✅ استخدم رابط نسبي بدل localhost
+        const response = await fetch('/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password, device_id, public_key })
