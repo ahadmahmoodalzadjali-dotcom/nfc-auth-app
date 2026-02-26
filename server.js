@@ -9,8 +9,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// هذا يخلي السيرفر يخدم الملفات الثابتة (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname)));
+// هذا يخلي السيرفر يخدم الملفات الثابتة (HTML, CSS, JS) من مجلد "public"
+app.use(express.static(path.join(__dirname, "public")));
 
 // الاتصال بقاعدة البيانات
 mongoose.connect(process.env.MONGO_URI)
@@ -54,8 +54,8 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// تشغيل السيرفر على كل الشبكة
-const PORT = 3000;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
+// تشغيل السيرفر على البورت اللي تحدده Render
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
